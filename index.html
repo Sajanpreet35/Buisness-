@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Vision By Sajan</title>
+</head>
+<body style="font-family:sans-serif;">
+<h2>AI Vision – Powered by Sajan</h2>
+
+<video id="camera" autoplay playsinline width="300"></video>
+<button onclick="capture()">Analyze</button>
+
+<p id="answer"></p>
+
+<script>
+  const workerURL = "YOUR_WORKER_URL"; // <-- यहाँ अपना worker URL डालना
+
+  async function startCamera() {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    document.getElementById("camera").srcObject = stream;
+  }
+
+  startCamera();
+
+  async function capture() {
+    const video = document.getElementById("camera");
+    const canvas = document.createElement("canvas");
+    canvas.width = 400;
+    canvas.height = 300;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, 400, 300);
+
+    const base64 = canvas.toDataURL("image/jpeg");
+
+    const res = await fetch(workerURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        imageBase64: base64,
+        prompt: "Hindi me human jaisa bolkar describe karo."
+      })
+    });
+
+    const text = await res.text();
+    document.getElementById("answer").textContent = text;
+
+    speak(text);
+  }
+
+  // AI Voice Output
+  function speak(text) {
+    const speaker = new SpeechSynthesisUtterance(text);
+    speaker.lang = "hi-IN";
+    window.speechSynthesis.speak(speaker);
+  }
+</script>
+
+</body>
+</html>
