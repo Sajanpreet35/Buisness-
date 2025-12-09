@@ -1,0 +1,21 @@
+<script>
+async function askAI(text) {
+    const res = await fetch("YOUR_WORKER_URL?q=" + encodeURIComponent(text));
+    const answer = await res.text();
+
+    // Show text
+    document.getElementById("output").innerText = answer;
+
+    // Speak in human-like Hindi voice
+    const v = new SpeechSynthesisUtterance(answer);
+    v.lang = "hi-IN";
+    v.rate = 1;
+    v.pitch = 1;
+    speechSynthesis.speak(v);
+}
+</script>
+
+<input id="input" placeholder="कुछ भी पूछो...">
+<button onclick="askAI(document.getElementById('input').value)">Ask</button>
+
+<p id="output"></p>
