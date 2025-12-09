@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sajan AI</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 90%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  background: #00aaff;
+  color: white;
+  cursor: pointer;
+}
+
+#output {
+  margin-top: 20px;
+  font-size: 18px;
+  white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+<h2>🤖 Sajan AI — Ask Anything</h2>
+
+<input id="input" placeholder="कुछ भी पूछो...">
+<button onclick="askAI()">Ask</button>
+
+<p id="output"></p>
+
+<script>
+async function askAI() {
+    const text = document.getElementById("input").value;
+
+    document.getElementById("output").innerText = "सोच रहा हूँ...";
+
+    const res = await fetch("https://shy-river-3099.darmindark691.workers.dev/?q=" + encodeURIComponent(text));
+
+    const answer = await res.text();
+
+    // Show text response
+    document.getElementById("output").innerText = answer;
+
+    // Speak in Hindi
+    const speak = new SpeechSynthesisUtterance(answer);
+    speak.lang = "hi-IN";
+    speak.rate = 1;
+    speak.pitch = 1;
+    speechSynthesis.speak(speak);
+}
+</script>
+
+</body>
+</html>
